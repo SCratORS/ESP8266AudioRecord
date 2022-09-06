@@ -1,0 +1,20 @@
+{
+  "name":"ESP8266 Audio Record",
+  "description":"Audio Record Library for ESP8266 hardware",
+  "keywords":"audio,record",
+  "authors":
+  {
+    "name": "SCratORS",
+    "maintainer": true
+  },
+  "repository":
+  {
+    "type": "git",
+    "url": "https://github.com/scrators/ESP8266AudioRecord.git"
+  },
+  "version": "1.0.0",
+  "license": "LGPL-3.0",
+  "frameworks": "arduino",
+  "platforms": ["espressif8266"],
+  "dependencies": []
+}
