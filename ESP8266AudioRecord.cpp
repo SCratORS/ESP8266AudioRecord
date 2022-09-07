@@ -1,17 +1,12 @@
 #include "ESP8266AudioRecord.h"
 #include <LittleFS.h>
-#include <driver/adc.h>
 
 void ESP8266AudioRecord::init(const uint32_t timer_delay)
 {
     _TIMER_DELAY=timer_delay;
 	timer1_isr_init();
 }
-ESP8266AudioRecord::ESP8266AudioRecord()
-{
-    adc1_config_width(ADC_WIDTH_12Bit);
-    adc1_config_channel_atten(ADC1_CHANNEL_0, ADC_ATTEN_11db);
-}
+ESP8266AudioRecord::ESP8266AudioRecord() {}
 
 ESP8266AudioRecord* ESP8266AudioRecord::getInstance() {
     static ESP8266AudioRecord instance; 
@@ -76,9 +71,7 @@ void IRAM_ATTR ESP8266AudioRecord::timer1_handler() {
     ESP8266AudioRecord::getInstance()->onTimer();
 }
 void IRAM_ATTR ESP8266AudioRecord::onTimer() {
-	uint16_t sample = adc1_get_raw(ADC1_CHANNEL_0);
-    	uint8_t value = map(sample, 0, 4095, 0, 255);
-  buffer[(uint8_t)active_buffer][buffer_pointer++] = value;//system_adc_read() >> 2;
+  buffer[(uint8_t)active_buffer][buffer_pointer++] = system_adc_read() >> 2;
   if (buffer_pointer == AUDIO_BUFFER_MAX) {
     buffer_pointer = 0;
     active_buffer = !active_buffer;
