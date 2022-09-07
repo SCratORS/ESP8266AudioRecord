@@ -71,7 +71,9 @@ void IRAM_ATTR ESP8266AudioRecord::timer1_handler() {
     ESP8266AudioRecord::getInstance()->onTimer();
 }
 void IRAM_ATTR ESP8266AudioRecord::onTimer() {
-  buffer[(uint8_t)active_buffer][buffer_pointer++] = system_adc_read() >> 2;
+	uint16_t sample = adc1_get_raw(ADC1_CHANNEL_0);
+    	uint8_t value = map(sample, 0, 4095, 0, 255);
+  buffer[(uint8_t)active_buffer][buffer_pointer++] = value;//system_adc_read() >> 2;
   if (buffer_pointer == AUDIO_BUFFER_MAX) {
     buffer_pointer = 0;
     active_buffer = !active_buffer;
