@@ -20,14 +20,14 @@ Support WAV PCM Mono, 8bit, 8kHz
 class ESP8266AudioRecord 
 {
 public:
-	void init(const uint32_t timer_delay = 625);
+	void init(const uint32_t timer_delay = 40000);
 	bool IRAM_ATTR RecordStart();
 	bool IRAM_ATTR RecordStop();
 	bool IRAM_ATTR Recording();
 	void IRAM_ATTR RecordHandle();
     static ESP8266AudioRecord* getInstance();
 protected:
-	uint32_t _TIMER_DELAY=625;
+	uint32_t _TIMER_DELAY=40000;
     void IRAM_ATTR onTimer();
     void IRAM_ATTR timer1_handler();
 
