@@ -13,7 +13,7 @@ ESP8266AudioRecord* ESP8266AudioRecord::getInstance() {
 	static ESP8266AudioRecord instance; 
 	return &instance;
 }
-bool ESP8266AudioRecord::RecordStart(const String &fname) {
+bool ESP8266AudioRecord::RecordStart() {
 	if (recording) return false;
 	recording = true;
 	active_buffer = 0;
