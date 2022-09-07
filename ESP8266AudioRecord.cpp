@@ -6,7 +6,7 @@ void ESP8266AudioRecord::init(const uint32_t timer_delay)
 	timer1_isr_init();
 }
 ESP8266AudioRecord::ESP8266AudioRecord() {
-	UDP.begin(UDP_PORT);
+//	UDP.begin(UDP_PORT);
 }
 
 ESP8266AudioRecord* ESP8266AudioRecord::getInstance() {
@@ -36,9 +36,9 @@ bool ESP8266AudioRecord::RecordStop() {
   	timer1_detachInterrupt();
   	recording = false;
   	if (buffer_pointer > 0) {
-		UDP.beginPacket(UDP.remoteIP(), UDP.remotePort());
-		UDP.write((const uint8_t *)buffer[(uint8_t)active_buffer], buffer_pointer);
-		UDP.endPacket();
+//		UDP.beginPacket(UDP.remoteIP(), UDP.remotePort());
+//		UDP.write((const uint8_t *)buffer[(uint8_t)active_buffer], buffer_pointer);
+//		UDP.endPacket();
   	}
   	return true;
 }
@@ -53,9 +53,9 @@ void ESP8266AudioRecord::RecordHandle() {
     		buffer_ready = false;
        		uint8_t selbuf = !active_buffer;
         	timer_stop();
-		UDP.beginPacket(UDP.remoteIP(), UDP.remotePort());
-		UDP.write((const uint8_t *)buffer[selbuf], AUDIO_BUFFER_MAX);
-		UDP.endPacket();
+//		UDP.beginPacket(UDP.remoteIP(), UDP.remotePort());
+//		UDP.write((const uint8_t *)buffer[selbuf], AUDIO_BUFFER_MAX);
+//		UDP.endPacket();
         	timer_start();
   	}
 }
