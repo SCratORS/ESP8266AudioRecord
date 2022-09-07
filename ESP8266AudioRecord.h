@@ -13,7 +13,7 @@ Support WAV PCM Mono, 8bit, 8kHz
 #include <user_interface.h>
 
 #define AUDIO_BUFFER_MAX 1024
-#define FILE_LENGTH      20000 //500000 // file sizr in byte, ~ 1 min
+#define FILE_LENGTH      200000 //500000 // file sizr in byte, ~ 1 min
 
 class ESP8266AudioRecord 
 {
