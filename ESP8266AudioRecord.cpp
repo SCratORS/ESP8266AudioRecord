@@ -41,7 +41,7 @@ bool ESP8266AudioRecord::RecordStop() {
   	timer1_detachInterrupt();
   	recording = false;
   	if (buffer_pointer > 0/* && data_size < FILE_LENGTH*/) {
-		UDP.beginPacket(UDP.remoteIP(), UDP.remotePort());
+		UDP.beginPacket("192.168.0.255", UDP_PORT);
     		UDP.write((const uint8_t *)buffer[(uint8_t)active_buffer], buffer_pointer);
     		UDP.endPacket();
     	//data_size += file.write((const uint8_t *)buffer[(uint8_t)active_buffer], buffer_pointer);
@@ -65,7 +65,7 @@ void ESP8266AudioRecord::RecordHandle() {
     	buffer_ready = false;
         uint8_t selbuf = !active_buffer;
         timer_stop();
-	UDP.beginPacket(UDP.remoteIP(), UDP.remotePort());
+	UDP.beginPacket("192.168.0.255", UDP_PORT);
 	UDP.write((const uint8_t *)buffer[selbuf], AUDIO_BUFFER_MAX);
 	UDP.endPacket();
 	//data_size += file.write((const uint8_t *)buffer[selbuf], AUDIO_BUFFER_MAX);
