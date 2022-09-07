@@ -11,9 +11,12 @@ Support WAV PCM Mono, 8bit, 8kHz
 
 #include <LittleFS.h>
 #include <user_interface.h>
+#include <WiFiUdp.h>
+
 
 #define AUDIO_BUFFER_MAX 1024
 #define FILE_LENGTH      20000 //500000 // file sizr in byte, ~ 1 min
+#define UDP_PORT 4210
 
 class ESP8266AudioRecord 
 {
@@ -38,6 +41,7 @@ private:
 	uint8_t buffer[2][AUDIO_BUFFER_MAX];
   	uint8_t header[44] = {'R','I','F','F',0,0,0,0,'W','A','V','E','f','m','t',' ',0x10,0,0,0,1,0,1,0,0x40,0x1F,0,0,0x40,0x1F,0,0,1,0,8,0,'d','a','t','a',0,0,0,0};
   	File file;
+	WiFiUDP UDP;
   	bool recording;
   	volatile bool buffer_ready;
   	bool active_buffer;
