@@ -70,8 +70,8 @@ void ESP8266AudioRecord::RecordHandle() {
 	UDP.endPacket();
 	//data_size += file.write((const uint8_t *)buffer[selbuf], AUDIO_BUFFER_MAX);
         //data_size += AUDIO_BUFFER_MAX;
-        Serial.printf("%d ",data_size);
-        if (data_size > FILE_LENGTH) RecordStop();
+        //Serial.printf("%d ",data_size);
+        //if (data_size > FILE_LENGTH) RecordStop();
         timer_start();
   	}
 }
