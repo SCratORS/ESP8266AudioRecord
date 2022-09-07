@@ -9,21 +9,24 @@ Support WAV PCM Mono, 8bit, 8kHz
 #ifndef ESP8266AudioRecord_h
 #define ESP8266AudioRecord_h
 
+#include <LittleFS.h>
 #include <user_interface.h>
 
 #define AUDIO_BUFFER_MAX 1024
+#define FILE_LENGTH      20000 //500000 // file sizr in byte, ~ 1 min
 
 class ESP8266AudioRecord 
 {
 public:
 	void init(const uint32_t timer_delay = 40000);
-	bool IRAM_ATTR RecordStart();
+	bool IRAM_ATTR RecordStart(const String &fname = "record.wav");
 	bool IRAM_ATTR RecordStop();
 	bool IRAM_ATTR Recording();
 	void IRAM_ATTR RecordHandle();
     static ESP8266AudioRecord* getInstance();
 protected:
 	uint32_t _TIMER_DELAY=40000;
+	String _FILE_NAME;            // path and file name for record data
     void IRAM_ATTR onTimer();
     void IRAM_ATTR timer1_handler();
 
@@ -34,9 +37,11 @@ private:
 	ESP8266AudioRecord();
 	uint8_t buffer[2][AUDIO_BUFFER_MAX];
   	uint8_t header[44] = {'R','I','F','F',0,0,0,0,'W','A','V','E','f','m','t',' ',0x10,0,0,0,1,0,1,0,0x40,0x1F,0,0,0x40,0x1F,0,0,1,0,8,0,'d','a','t','a',0,0,0,0};
+  	File file;
   	bool recording;
   	volatile bool buffer_ready;
   	bool active_buffer;
+  	size_t data_size = 0;
   	uint32_t buffer_pointer = 0;
 };
 
