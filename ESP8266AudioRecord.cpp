@@ -1,12 +1,17 @@
 #include "ESP8266AudioRecord.h"
 #include <LittleFS.h>
+#include <driver/adc.h>
 
 void ESP8266AudioRecord::init(const uint32_t timer_delay)
 {
     _TIMER_DELAY=timer_delay;
 	timer1_isr_init();
 }
-ESP8266AudioRecord::ESP8266AudioRecord(){}
+ESP8266AudioRecord::ESP8266AudioRecord()
+{
+    adc1_config_width(ADC_WIDTH_12Bit);
+    adc1_config_channel_atten(ADC1_CHANNEL_0, ADC_ATTEN_11db);
+}
 
 ESP8266AudioRecord* ESP8266AudioRecord::getInstance() {
     static ESP8266AudioRecord instance; 
