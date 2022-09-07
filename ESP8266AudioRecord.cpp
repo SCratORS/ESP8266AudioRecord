@@ -1,4 +1,5 @@
 #include "ESP8266AudioRecord.h"
+#include <LittleFS.h>
 
 void ESP8266AudioRecord::init(const uint32_t timer_delay)
 {
@@ -11,13 +12,16 @@ ESP8266AudioRecord* ESP8266AudioRecord::getInstance() {
     static ESP8266AudioRecord instance; 
     return &instance;
 }
-bool ESP8266AudioRecord::RecordStart() {
+bool ESP8266AudioRecord::RecordStart(const String &fname) {
 	if (recording) return false;
+	file = LittleFS.open(fname, "w");
+	if (!file) return false;
 	recording = true;
 	active_buffer = 0;
 	buffer_pointer = 0;
 	buffer_ready = false;
-
+	file.seek(0);
+	file.write((const byte *)header, sizeof(header));
     timer1_attachInterrupt((void(*)()) &ESP8266AudioRecord::timer1_handler);
     timer_start();
 	return true;
@@ -31,12 +35,18 @@ void ESP8266AudioRecord::timer_stop() {
 }
 bool ESP8266AudioRecord::RecordStop() {
 	if (!recording) return false;
-    	timer_stop();
+    timer_stop();
   	timer1_detachInterrupt();
   	recording = false;
-  	if (buffer_pointer > 0) {
-    	//write((const uint8_t *)buffer[(uint8_t)active_buffer], buffer_pointer);
+  	if (buffer_pointer > 0 && data_size < FILE_LENGTH) {
+    	data_size += file.write((const uint8_t *)buffer[(uint8_t)active_buffer], buffer_pointer);
   	}
+  	uint32_t file_size = data_size + 36;
+  	memcpy(header + 4, &file_size, 4);
+ 		memcpy(header + 40, &data_size, 4);
+  	file.seek(0);
+  	file.write((const byte *)header, sizeof(header));
+  	file.close();
   	return true;
 }
 
@@ -50,7 +60,10 @@ void ESP8266AudioRecord::RecordHandle() {
     	buffer_ready = false;
         uint8_t selbuf = !active_buffer;
         timer_stop();
-    	//write((const uint8_t *)buffer[selbuf], AUDIO_BUFFER_MAX);
+    	data_size += file.write((const uint8_t *)buffer[selbuf], AUDIO_BUFFER_MAX);
+        //data_size += AUDIO_BUFFER_MAX;
+        Serial.printf("%d ",data_size);
+        if (data_size > FILE_LENGTH) RecordStop();
         timer_start();
   	}
 }
